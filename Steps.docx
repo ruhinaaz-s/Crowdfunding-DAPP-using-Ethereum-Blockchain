@@ -1,0 +1,153 @@
+Steps:
+
+======================================================================================
+*** Create a client folder
+======================================================================================
+*** Initialize the blockchain environment and the web3 part of the code.
+
+    - Perform the following code in the terminal: 
+            - npx thirdweb@latest create --contract
+            - Enter yes
+            - Answer The Questions Asked As Below:
+                √ What is your project named? ... web3
+                √ What framework do you want to use? » Hardhat
+                √ What will be the name of your new smart contract? ... Crowdfunding
+                √ What type of contract do you want to start from? » Empty Contract
+                Creating a new thirdweb contracts project in C:\Users\Ruhinaaz-Work\Blockchain\Crowdfunding\web3.
+    - Change the directory to web3 
+    - For env setup:
+            - npm install dotenv
+======================================================================================
+*** Create Smart Contract
+
+    - Rename the contract to "CrowdFunding.sol"
+    - Write the logic of the contract
+======================================================================================
+*** In hardhat.config.js file:
+
+    - Copy the private key from your metamask account that is connected to georli test network.
+    - Create a .env file and paste the private key. Note that the git ignore consists of .env
+    - Search for goerli rpc and copy goerli testnet endpoint in order to interact with the blockchain
+    - In the hardhat.config.js, do the following:
+            - Below version: 
+                    defaultNetwork: 'goerli',
+                    networks: {
+                        hardhat: {},        //empty sepolia
+                        goerli: {
+                            url: 'https://rpc.ankr.com/eth_goerli',  //the copied rpc
+                            accounts: [`0x${process.env.PRIVATE_KEY}`]
+                        }
+                    },
+========================================================================================
+*** In package.json, see there exists:
+
+    - "deploy": "npx thirdweb@latest deploy",
+    - In Terminal:
+            npm run deploy
+    - Open the link that pops in the terminal after above command.
+    - There on the website click on "Connect Wallet" and connect metamask
+    - Deploy the contract and then Sign it through the metamask, keep the "add to dashboard" check-box checked.
+
+========================================================================================
+*** Build Front-End:
+
+    - Go to client folder
+    - In Terminal:
+            - npx thirdweb create --app
+            - Answer The following questions as such: 
+                √ What is your project named? ... ./
+                √ Which blockchain do you want to use? » EVM
+                √ What framework do you want to use? » Vite
+                √ What language do you want to use? » JavaScript
+                Creating a new thirdweb app in C:\Users\Ruhinaaz-Work\Blockchain\Crowdfunding\client.
+            - Install React Router Dom:
+                npm install react-router-dom
+            - Run the development server:
+                npm run dev
+    - Delete the src folder and create a new one to start from scratch.
+    - Create an index.js file and write code
+    - Create an App.js file and write code
+    - Change App.js and index.js to App.jsx and main.jsx respectively
+    - Install Tailwind CSS with Vite. Look Up for the process online
+            - npm install -D tailwindcss postcss autoprefixer
+            - npx tailwindcss init -p       //creates a tailwind.config.js file
+            - In tailwind.config.js, configure the template paths.
+                    module.exports = {
+                        content: [
+                            "./index.html",
+                            "./src/**/*.{js,ts,jsx,tsx}",
+                        ],
+                        theme: {
+                            extend: {},
+                        },
+                        plugins: [],
+                    }
+            - Add tailwind directives to our CSS by creating a new file index.css in the src folder:
+                    @tailwind base;
+                    @tailwind components;
+                    @tailwind utilities;
+            - Copy the css code from github repo
+    - Copy the assets folder into the src folder from github
+    - Create a folder named "constants' and create a file index.js. Then copy the code from github. These contain some navigation links with the image urls included.
+    - Create a folder named "context" and it is an important folder because it will consists of react context API which is going to allow us to use the third web logic from within our entire application
+    - Create a "components" folder, "pages" folder and an "utils" folder. Inside of utils folder, create a file index.js. Paste the code from github. The utils is a short form for utility functions. Some functions that would be used often throughout out application are mentioned down here.
+
+    - Start building the front-end, starting with App.jsx
+    - Add "theme" to tailwind.config.js from github
+    - Create components accordingly and write code in them
+    - Create Pages, export them from index.js in pages and then import them in App.jsx
+    - Create Components "Sidebar.jsx" and "Navbar.jsx" and write the logic
+
+========================================================================================
+*** For all of our smart contract interactions:
+
+    - Create an "index.jsx" file in the context folder
+    - Write all the logic in one single file, i.e. index.js
+    - For all that logic to work, wrap our entire application around that context
+
+*** To wrap the application around created context:
+
+    - In main.jsx,
+            1) import {StateContextProvider} from "./context";
+            2) Wrap the <App /> component inside of <StateContextProvider>
+                    root.render(
+                        <ThirdwebProvider desiredChainId={ChainId.Goerli}>
+                            <Router>
+                                <StateContextProvider>
+                                    <App />
+                                </StateContextProvider>
+                            </Router>
+                        </ThirdwebProvider>
+                    );
+
+*** In order to access "address, contract and createCampaign" from "index.jsx" in other pages:
+
+    Suppose we want to access them into "CreateCampaign" component,
+        - import {useStateContext} from "../context";
+        - In "CreateCampaign" function,
+                const { CreateCampaign } = useStateContext();
+        This is how you share data and functions and their funcitonality across all the pages and components in your app
+        
+*** To pass data from our form to smart contract:
+
+    - In our "CreateCampaign" component --- In "handleSubmit" function:
+            - make it async
+            - await createCampaign({
+                ...form,
+                target: ethers.utils.parseUnits(form.target, 18), //18 decimals to display wei (1ETH = 10^18 Wei )
+            });       //pass props
+            
+========================================================================================
+*** Creating Home Page:
+    
+
+
+    
+
+
+    
+
+
+
+
+
